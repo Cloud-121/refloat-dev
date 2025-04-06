@@ -10,3 +10,4 @@ ui.qml
 *.obj
 *.so
 *.vescpkg
+make.sh

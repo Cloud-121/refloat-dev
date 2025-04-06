@@ -417,17 +417,17 @@ static bool check_faults(Data *d) {
                 state_stop(&d->state, STOP_SWITCH_FULL);
                 return true;
             }
-            if (fabsf(d->imu.pitch) > 18) {
+            if (fabsf(d->imu.pitch) > 25) {
                 state_stop(&d->state, STOP_REVERSE_STOP);
                 return true;
             }
-            // Above 10 degrees for a full second? Switch it off
-            if (fabsf(d->imu.pitch) > 10 && timer_older(&d->time, d->reverse_timer, 1)) {
+            // Above 18 degrees for a full second? Switch it off
+            if (fabsf(d->imu.pitch) > 18 && timer_older(&d->time, d->reverse_timer, 1)) {
                 state_stop(&d->state, STOP_REVERSE_STOP);
                 return true;
             }
-            // Above 5 degrees for 2 seconds? Switch it off
-            if (fabsf(d->imu.pitch) > 5 && timer_older(&d->time, d->reverse_timer, 2)) {
+            // Above 12 degrees for 2 seconds? Switch it off
+            if (fabsf(d->imu.pitch) > 12 && timer_older(&d->time, d->reverse_timer, 2)) {
                 state_stop(&d->state, STOP_REVERSE_STOP);
                 return true;
             }
@@ -506,9 +506,9 @@ static void calculate_setpoint_target(Data *d) {
         // accumalete erpms:
         d->reverse_total_erpm += d->motor.erpm;
         if (fabsf(d->reverse_total_erpm) > d->reverse_tolerance) {
-            // tilt down by 10 degrees after exceeding aggregate erpm
+            // tilt down by 18 degrees after exceeding aggregate erpm
             d->setpoint_target =
-                10 * (fabsf(d->reverse_total_erpm) - d->reverse_tolerance) * 0.000008;
+                18 * (fabsf(d->reverse_total_erpm) - d->reverse_tolerance) * 0.000008;
         } else {
             if (fabsf(d->reverse_total_erpm) <= d->reverse_tolerance * 0.5) {
                 if (d->motor.erpm >= 0) {
